@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Tracking System</title>
+    <link rel="stylesheet" href="../public/css/style.css"> 
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Project Tracking System</h1>
+
+        <!-- Add Project Form -->
+        <div class="form-container">
+            <h2>Add a New Project</h2>
+            <input type="text" id="projectName" placeholder="Project Name" required>
+            <textarea id="projectDescription" placeholder="Project Description" required></textarea>
+            <button onclick="addProject()">Add Project</button>
+        </div>
+
+        <!-- Button to load all projects -->
+        <button onclick="getAllProjects()">Show All Projects</button>
+
+        <!-- List of projects -->
+        <div id="projectList"></div>
+    </div>
+
+    <script src="../public/js/script.js"></script>
+</body>
+</html>
