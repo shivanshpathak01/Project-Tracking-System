@@ -1,31 +1,47 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+    <head>
+        <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Tracking System</title>
-    <link rel="stylesheet" href="../public/css/style.css"> 
-    <script src="https://cdn.tailwindcss.com"></script>
+     <link rel="stylesheet" href="../public/css/style.css"> 
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <h1>Project Tracking System</h1>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Project Tracking System</h1>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="/home" class="hover:underline">Home</a></li>
+                    <li><a href="/getallProjects" class="hover:underline">All Projects</a></li>
+                    <!-- <li><a href="/deleteProjects" class="hover:underline">Delete Projects</a></li> -->
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-        <!-- Add Project Form -->
-        <div class="form-container">
-            <h2>Add a New Project</h2>
-            <input type="text" id="projectName" placeholder="Project Name" required>
-            <textarea id="projectDescription" placeholder="Project Description" required></textarea>
-            <button onclick="addProject()">Add Project</button>
+    <!-- Main Content -->
+    <main class="container mx-auto mt-10">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Welcome to the Project Tracking System</h2>
         </div>
 
-        <!-- Button to load all projects -->
-        <button onclick="getAllProjects()">Show All Projects</button>
-
-        <!-- List of projects -->
-        <div id="projectList"></div>
-    </div>
-
+        <div class="flex space-x-4">
+            <!-- 'All Projects' Button -->
+            <a href="/getAllProjects" class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">All Projects</a>
+            
+            <!-- 'Add a New Project' Button -->
+            <a href="/addProject" class="px-6 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700">Add a New Project</a>
+        </div>
+    </main>
     <script src="../public/js/script.js"></script>
 </body>
 </html>
+
+
+

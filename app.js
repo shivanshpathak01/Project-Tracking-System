@@ -2,24 +2,28 @@ const express = require('express');
 const mysql = require('mysql2');
 const app = express();
 const path = require('path');
-// const bodyParser = require('body-parser');
-// const projectRoutes = require('../routes/projectRoutes');
+
 
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname,'public')));
 
-// Route: Display the form to add a project
-
+// Primary Route 
 app.get('/', (req, res) => {
     res.render('index');
 });
 
 
+// Home Route 
+app.get('/home', (req, res) => {
+    res.render('index');
+});
 
+
+// Add a new Project by rendering a form 
 app.get('/addProject', (req, res) => {
-    res.render('add-project');
+    res.render('addProject');
 });
 // Route: Add a new project to the database
 app.post('/addProject', (req, res) => {
@@ -48,6 +52,7 @@ app.get('/getAllProjects', (req, res) => {
     });
 });
 
+// Connecting to the Database 
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -55,6 +60,33 @@ const connection = mysql.createConnection({
     database: 'project_tracking_db',
 });
 
+// Delete Route 
+app.get('/deleteProjects',(req,res)=>{
+    res.redirect('getAllProjects');
+})
+
+const promisePool = connection.promise();
+
+app.post('/projects/delete/:id', async (req, res) => {
+    try {
+        const userId = req.params.id; // Get user ID from URL parameter
+        const query = 'DELETE FROM projects WHERE id = ?';
+        await promisePool.query(query, [userId]);
+
+        await promisePool.query('SET @new_id = 0;');
+        await promisePool.query('UPDATE projects SET id = (@new_id := @new_id + 1);');
+        await promisePool.query('ALTER TABLE projects AUTO_INCREMENT = 1;');
+
+        res.redirect('/getAllProjects'); // Redirect back to the users table
+    } catch (err) {
+        console.error('Error deleting project:', err.message);
+        res.status(500).send('Error deleting project');
+    }
+});
+
+
+
+// Port 
 const PORT = 5000;
 app.listen(PORT, ()=>{
     console.log(`server is running on http://localhost:${PORT}`);
