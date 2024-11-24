@@ -37,17 +37,6 @@ connection.connect((err) => {
     console.log('Connected to MySQL Database');
 });
 
-// Middleware: File Upload Setup
-
-//half working -- old
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'uploads/');
-//     },
-//     filename: (req, file, cb) => {
-//         cb(null, `${Date.now()}-${file.originalname}`);
-//     },
-// });
 
 // Set up multer for file uploading
 const storage = multer.diskStorage({
@@ -82,10 +71,6 @@ app.post('/uploadFile', upload.single('file'), (req, res) => {
 });
 
 
-
-
-
-
 // Routes
 // Primary Route
 app.get('/', (req, res) => {
@@ -103,7 +88,7 @@ app.get('/signup', (req, res) => {
     res.render('signup');
 });
 
-// Login Route
+
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
     const query = 'SELECT * FROM users WHERE email = ?';
@@ -116,12 +101,16 @@ app.post('/login', (req, res) => {
         if (results.length === 0) {
             return res.send('Invalid email or password');
         }
+
         const user = results[0];
         bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) throw err;
+            if (err) {
+                console.error('Error comparing passwords:', err);
+                return res.status(500).send('Internal server error');
+            }
             if (isMatch) {
                 req.session.user = user; // Save user in session
-                res.redirect('/addProject');
+                res.redirect('/dashboard');     
             } else {
                 res.send('Invalid email or password');
             }
@@ -129,50 +118,35 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Signup Route
-// Old -- working 
 
-// app.post('/signup', async (req, res) => {
-//     const { name, email, password } = req.body;
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const query = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-
-//     connection.query(query, [name, email, hashedPassword], (err) => {
-//         if (err) {
-//             console.error('Error signing up user:', err);
-//             return res.status(500).send('Error signing up');
-//         }
-//         res.redirect('/login');
-//     });
-// });
-
-// new 
-
-// Signup Route
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
 
     // Check if the user already exists
     const checkQuery = 'SELECT * FROM users WHERE email = ?';
-    connection.query(checkQuery, [email], (err, results) => {
-        if (err) throw err;
+    connection.query(checkQuery, [email], async (err, results) => {
+        if (err) {
+            console.error('Error checking user:', err);
+            return res.status(500).send('Internal server error');
+        }
 
         if (results.length > 0) {
             return res.status(400).send('User already exists. Please log in.');
         }
 
-        // Insert new user
-        const query = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-        connection.query(query, [name, email, password], (err, result) => {
-            if (err) throw err;
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Automatically log in the user after signup
-            req.session.user = {
-                id: result.insertId,
-                name,
-                email,
-            };
-            res.redirect('/dashboard'); // Redirect to dashboard
+        // Insert new user with hashed password
+        const query = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
+        connection.query(query, [name, email, hashedPassword], (err, result) => {
+            if (err) {
+                console.error('Error signing up user:', err);
+                return res.status(500).send('Error signing up');
+            }
+
+            
+            res.redirect('/login'); // Redirect to dashboard
         });
     });
 });
@@ -193,19 +167,6 @@ app.get('/home', (req, res) => {
 app.get('/addProject', (req, res) => {
     res.render('addProject');
 });
-// Route: Add a new project to the database
-// app.post('/addProject', (req, res) => {
-//     const { name, description, start_date, end_date } = req.body;
-//     const query = `INSERT INTO projects (name, description, start_date, end_date) VALUES (?, ?, ?, ?)`;
-
-//     connection.query(query, [name, description, start_date, end_date], (err) => {
-//         if (err) {
-//             console.error('Error adding project:', err);
-//             return res.status(500).send('Error adding project');
-//         }
-//         res.redirect('/getAllProjects');
-//     });
-// });
 
 // Add a New Project Route
 app.post('/addProject', (req, res) => {
@@ -214,13 +175,13 @@ app.post('/addProject', (req, res) => {
         return res.redirect('/login');
     }
 
-    const { name, description, start_date, end_date } = req.body;
+    const { name, description, upload_date } = req.body;
     const userId = req.session.user.id; // Retrieve user ID from session
 
     // Updated query to include user_id
-    const query = `INSERT INTO projects (name, description, start_date, end_date, user_id) VALUES (?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO projects (name, description, upload_date, user_id) VALUES (?, ?, ?, ?)`;
 
-    connection.query(query, [name, description, start_date, end_date, userId], (err) => {
+    connection.query(query, [name, description, upload_date, userId], (err) => {
         if (err) {
             console.error('Error adding project:', err);
             return res.status(500).send('Error adding project');
@@ -299,26 +260,42 @@ app.get('/dashboard', (req, res) => {
 });
 
 
+// New Route: Delete a specific project
+// app.post('/projects/delete/:id', (req, res) => {
+//     const projectId = req.params.id; // Get the project ID from the URL parameter
+//     const userId = req.session.user.id; // Ensure the project belongs to the logged-in user
 
+//     const query = 'DELETE FROM projects WHERE id = ? AND user_id = ?'; // Restrict deletion to the user's projects
 
-// Route: Upload File
-// Old -- working
-// app.post('/upload', upload.single('file'), (req, res) => {
-//     if (!req.session.user) {
-//         return res.redirect('/login');
-//     }
-//     const userId = req.session.user.id;
-//     const fileName = req.file.filename;
-//     const query = 'INSERT INTO user_files (user_id, file_name) VALUES (?, ?)';
-
-//     connection.query(query, [userId, fileName], (err) => {
+//     connection.query(query, [projectId, userId], (err) => {
 //         if (err) {
-//             console.error('Error uploading file:', err);
-//             return res.status(500).send('Error uploading file');
+//             console.error('Error deleting project:', err);
+//             return res.status(500).send('Error deleting project');
 //         }
-//         res.redirect('/dashboard');
+
+//         res.redirect('/dashboard'); // Redirect back to the dashboard after deletion
 //     });
 // });
+
+
+app.post('/projects/delete/:id', async (req, res) => {
+    try {
+        const projectId = req.params.id; // Get project ID from URL parameter
+        const query = 'DELETE FROM projects WHERE id = ?';
+        await promisePool.query(query, [projectId]);
+
+        // Optional: Reset auto-increment IDs (if needed)
+        await promisePool.query('SET @new_id = 0;');
+        await promisePool.query('UPDATE projects SET id = (@new_id := @new_id + 1);');
+        await promisePool.query('ALTER TABLE projects AUTO_INCREMENT = 1;');
+
+        res.redirect('/dashboard'); // Redirect to the "dashboard" page
+    } catch (err) {
+        console.error('Error deleting project:', err.message);
+        res.status(500).send('Error deleting project');
+    }
+});
+
 
 
 
@@ -328,9 +305,6 @@ app.get('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
-
-
-
 
 
 // Port Setup
