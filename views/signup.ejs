@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,69 +6,55 @@
     <title>Sign Up</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gradient-to-r from-green-400 to-blue-500 min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
-        <h1 class="text-2xl font-bold mb-6 text-center">Sign Up</h1>
-        <form action="/signup" method="POST" class="space-y-4">
-            <div>
-                <label for="name" class="block text-sm font-medium">Name</label>
-                <input type="text" id="name" name="name" class="w-full px-3 py-2 border rounded-md" required>
+
+<body class="bg-gradient-to-r from-green-400 to-blue-500 min-h-screen">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white py-4 shadow-lg fixed top-0 w-full z-50">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <!-- Logo or Title -->
+            <div class="flex items-center space-x-3">
+                <h1 class="text-3xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-200">
+                    Project Tracking System
+                </h1>
             </div>
-            <div>
-                <label for="email" class="block text-sm font-medium">Email</label>
-                <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded-md" required>
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium">Password</label>
-                <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded-md" required>
-            </div>
-            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-                Sign Up
-            </button>
-        </form>
-        <p class="mt-4 text-sm text-center">
-            Already have an account? <a href="/login" class="text-blue-700 underline">Log in</a>
-        </p>
-    </div>
+            
+            <!-- Navigation Links -->
+            <nav>
+                <ul class="flex space-x-8 text-lg font-medium">
+                    <li><a href="/" class="hover:text-yellow-300 transition duration-300">Home</a></li>
+                    <li><a href="/getallProjects" class="hover:text-yellow-300 transition duration-300">All Projects</a></li>
+                    <li><a href="/login" class="hover:text-yellow-300 transition duration-300">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+
+    <!-- Main Content Section -->
+    <main class="flex items-center justify-center pt-20">
+        <div class="bg-white p-8 rounded-lg shadow-md w-96">
+            <h1 class="text-2xl font-bold mb-6 text-center">Sign Up</h1>
+            <form action="/signup" method="POST" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium">Name</label>
+                    <input type="text" id="name" name="name" class="w-full px-3 py-2 border rounded-md" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium">Email</label>
+                    <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded-md" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium">Password</label>
+                    <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded-md" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+                    Sign Up
+                </button>
+            </form>
+            <p class="mt-4 text-sm text-center">
+                Already have an account? <a href="/login" class="text-blue-700 underline">Log in</a>
+            </p>
+        </div>
+    </main>
 </body>
 </html>
-
-
-<!-- old -- working  -->
-            <!-- <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Signup</title>
-                <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-            </head>
-            <body class="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 min-h-screen flex items-center justify-center">
-                <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-                    <h1 class="text-2xl font-bold text-center text-purple-600">Signup</h1>
-                    <form action="/signup" method="POST" class="space-y-6 mt-6">
-                        <div>
-                            <label for="name" class="block text-gray-700">Name</label>
-                            <input type="text" name="name" id="name" required
-                                class="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-purple-500">
-                        </div>
-                        <div>
-                            <label for="email" class="block text-gray-700">Email</label>
-                            <input type="email" name="email" id="email" required
-                                class="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-purple-500">
-                        </div>
-                        <div>
-                            <label for="password" class="block text-gray-700">Password</label>
-                            <input type="password" name="password" id="password" required
-                                class="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-purple-500">
-                        </div>
-                        <button type="submit" class="w-full py-2 bg-purple-600 text-white rounded shadow hover:bg-purple-700">
-                            Sign Up
-                        </button>
-                    </form>
-                    <p class="text-center text-gray-600 mt-4">
-                        Already have an account? <a href="/login" class="text-purple-600 hover:underline">Log in</a>
-                    </p>
-                </div>
-            </body>
-            </html> -->
