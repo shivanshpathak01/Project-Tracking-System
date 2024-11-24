@@ -6,6 +6,18 @@
     <title>Add Project</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
+<header class="bg-blue-700 text-white py-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center px-4">
+        <h1 class="text-3xl font-extrabold tracking-wide">Project Tracking System</h1>
+        <nav>
+            <ul class="flex space-x-6 text-lg">
+                <li><a href="/" class="hover:underline">Home</a></li>
+                <li><a href="/getallProjects" class="hover:underline">All Projects</a></li>
+                <li><a href="/login" class="hover:underline">Login</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 <body class="bg-gradient-to-r from-indigo-600 to-indigo-800 min-h-screen font-sans">
     <!-- Container to center the form -->
     <div class="flex items-center justify-center min-h-screen bg-gradient-to-r from-teal-500 via-purple-600 to-indigo-700 bg-cover">
@@ -34,7 +46,7 @@
                 <!-- Project Start Date -->
                 <div>
                     <label for="start_date" class="block text-lg font-semibold text-gray-700">Start Date</label>
-                    <input type="date" id="start_date" name="start_date" required class="w-full p-4 mt-2 text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    <input type="date" id="upload_date" name="upload_date" required class="w-full p-4 mt-2 text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                 </div>
 
                 <!-- Submit Button -->
