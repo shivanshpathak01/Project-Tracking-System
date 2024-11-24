@@ -1,0 +1,183 @@
+                *******   SQL   *******
+
+-> Relational Database {data stored in Tables form} ex- MySQL, Oracle
+-> In the language of databases : 
+    columns - designs ==> schema
+    rows ==> tuples
+
+-> SQL is case insensitive language.
+-> Creating a Database : CREATE DATABASE db_name;
+-> Deleting a Database : DROP DATABASE db_name;
+-> Using a Database to create something or doing any task : USE db_name;
+
+
+-> Checking data of the Table : select * from table_name;
+-> writing the "if not exists" statement will create the database if it is already not there 
+-> use "drop database if exists db_name;" for Deleting the database if exists
+-> If we have to view any tables or something in any database then firstly we have to "use" them 
+-> "show db_name" will show all the databases
+
+                    ***********  TABLE Queries  ************
+
+-> Creating a Table in SQL : CREATE TABLE table_name(
+    column_name1 datatype constraint,
+    column_name2 datatype constraint,
+    column_name3 datatype constraint,
+);
+
+-> Inserting in the Table : insert into table_name
+                            values
+                            (101,"ameen",12),
+                            (102, "alice",14);
+=> we prefer VARCHAR  datatype bcz of variable sizing 
+-> Constraint : Rules for data in Table 
+ 
+ columns : 
+ 1. Not null : cannot have a null value   
+ 2. Unique : different values
+ 3. Default : sets the Default value of a column 
+ 4. Check : limit the values allowed in the column
+
+Primary Key : makes a column unique and not null but used only for one (can be declared by writing  the name in front of that column)  
+-> There is only one Primary key and it should not be null
+
+Snippet : {create table t(
+            id int,
+            age int,
+            name varchar(30) not null,
+            email varchar(50) unique,
+            followers int default 0,
+            following int,
+            constraint check(age>=13),
+            primary key (id)
+            );  }
+
+Foreign Key : prevent actions  that would destroy links between tables 
+-> A foreign key is a column (or set of columns) in a table that refers to the primary key in a another table 
+-> FKs can have duplicate and null values 
+-> There can be multiple FKs
+
+            create table s(
+            id int primary key,
+            content varchar(100),
+            user_id int ,
+            foreign key (user_id) REFERENCES t(id)
+            );          
+
+
+            *********  Table Queries  ********
+
+Insert into Table : 
+
+INSERT INTO t (id, age, name, email, followers, following)
+values 
+(1, 14, "kapoor","kapoor234@google.in",20000,12),
+(2,17,"sinzo","sinzo@yahoo.in",251502,512),
+(3,21,"harshit","harshitsingh@yahoo.in",258,123);
+
+Select command : Select and show data from the DB 
+Synatx: SELECT col1,col2 FROM table_name
+        SELECT * FROM table_name        {to show all}
+
+DISTINCT Keyword : Used to get all the unique elements 
+
+            *********  Clauses  **********
+
+(i)- Where : To define some condition 
+Syntax  : SELECT col1,col2 FROM table_name
+WHERE conditions;  {select name, age 
+                    from t 
+                    where age + 1>=18;
+                    }
+
+-> We can  use arithmetic opeartors also in where clause (Example shown above)
+
+====> OPERATORS : 1. AND (Both conditions should be true)
+2. OR (One of the condition should be true)
+3. BETWEEN (Selects for a given range)
+4. IN (matches any value in the list)   {EX : select *
+                                              from t 
+                                              where email in ("kapoor234                         									     @google.in","sinzo@yahoo.in","harshitsingh@yahoo.in"); }
+
+5. NOT (to negate the given condition)
+
+(ii)- Limit : Sets an upper limit on number of (tuples) rows to be returned
+Syntax : SELECT col1,col2 FROM table_name
+         LIMIT number;
+
+(iii)- Order by : To sort in ascending (ASC) or descending order (DESC)
+Syntax : SELECT col1,col2 FROM table_name
+         ORDER BY col_name ASC;
+
+Aggregate Functions : perform  a calculation on a set of values, and return a single value.
+1. Count ()
+2. Max ()
+3. Min ()
+4. Sum ()
+5. Avg ()
+
+Syntax :  Select function_name(entity)
+          From table;
+
+
+(iv)- Group By : Groups rows that have the same values into summary rows.
+-> It collects data from multiple records and groups the result by one or more column. 
+-> Generally we use Group by with some aggregation function  
+
+Syntax : SELECT col1,col2
+         FROM table_name
+         GROUP BY col_name;
+
+(v)- Having :  Similar to where clause i.e. applies some condition on rows.
+-> But it is used when we want to apply any condition after grouping 
+
+Syntax : SELECT col1,col2 FROM table_name
+         GROUP BY col_name
+         Having condition;
+
+==> WHERE is for the table, HAVING is for a Group
+Grouping is necessary for HAVING 
+
+********  GENERAL ORDER  **********
+
+SELECT column
+FROM table_name
+WHERE condition
+GROUP BY column
+HAVING condition
+ORDER BY column ASC;
+
+*********  Table Queries  *********
+
+UPDATE : to update existing rows
+===> SQL do not let us update the DB so we have to write a command there "SET SQL_SAFE_UPDATES = 0"
+Syntax : UPDATE table_name
+         SET col1  = val1,col2 = val2
+         WHERE condition;
+
+
+DELETE : To delete existing rows 
+Syntax : DELETE FROM table_name
+         WHERE condition;
+
+ALTER : To change the Schema 
+1. ADD column : ALTER TABLE table_name
+                ADD COLUMN column_name datatype constraint;
+
+2. DROP column : ALTER TABLE table_name
+                DROP COLUMN column_name;
+
+3. RENAME Table : ALTER TABLE table_name
+                  RENAME TO new_table_name;
+
+4. CHANGE column (rename) : ALTER TABLE table_name
+                            CHANGE COLUMN old_name new_name new_datatype new_constraint;
+
+5. MODIFY column (modify datatype / constraint) : ALTER TABLE table_name
+                                                  MODIFY col_name new_datatype new_constraint;
+
+TRUNCATE : To delete Table's data
+Syntax : TRUNCATE TABLE table_name;
+
+
+===> Difference b/w DROP and TRUNCATE : In TRUNCATE all the data of TRUNCATE gets Erased but the Table Still exists while in DROP Table Gets deleted Permanently, means you cannot modify the table now 
